@@ -8,15 +8,9 @@ import { fetchNotes, insertNote, updateNote, deleteNoteDB } from './supabaseAPI'
 
 export default function App() {
   const containerRef = useRef(null);
-
-  const [notes, setNotes] = useState(() => {
-    const saved = localStorage.getItem("timeline-notes");
-    return saved ? JSON.parse(saved) : [];
-  });
-
+  const [notes, setNotes] = useState([]);
   const [creatingNote, setCreatingNote] = useState(null);
   const [editingNote, setEditingNote] = useState(null);
-
   const activeNote = creatingNote || editingNote;
 
   useEffect(() => {
@@ -36,10 +30,6 @@ export default function App() {
       containerRef.current.scrollTop = containerRef.current.scrollHeight / 2;
     }
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("timeline-notes", JSON.stringify(notes));
-  }, [notes]);
 
   const getYFromDate = (dateStr) => {
     if (!dateStr) return 5000;
@@ -169,7 +159,6 @@ export default function App() {
             containerRef.current.scrollLeft
           : 0;
         const noteWidth = 250;
-        //const noteHeight = 150;
 
         let lineLeft, lineWidth;
         if (note.x + noteWidth < centerX) {
