@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./App.css";
+import supabase from './supabaseClient';
+import { fetchNotes, insertNote, updateNote, deleteNoteDB } from './supabaseAPI';
 
 export default function App() {
   const containerRef = useRef(null);
@@ -16,6 +18,18 @@ export default function App() {
   const [editingNote, setEditingNote] = useState(null);
 
   const activeNote = creatingNote || editingNote;
+
+  useEffect(() => {
+    const loadNotes = async () => {
+      try {
+        const data = await fetchNotes();
+        setNotes(data);
+      } catch (err) {
+        console.error("Errore nel caricamento:", err);
+      }
+    };
+    loadNotes();
+  }, []);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -60,7 +74,7 @@ export default function App() {
     setEditingNote({ ...note });
   };
 
-  const saveNote = () => {
+  const saveNote = async () => {
     if (editingNote) {
       const updatedNote = {
         ...editingNote,
@@ -69,23 +83,22 @@ export default function App() {
       setNotes((prev) =>
         prev.map((n) => (n.id === editingNote.id ? updatedNote : n))
       );
+      await updateNote(updatedNote);
       setEditingNote(null);
     } else {
-      setNotes((prev) => [
-        ...prev,
-        {
-          ...creatingNote,
-          y: getYFromDate(
-            creatingNote.date || new Date().toISOString().split("T")[0]
-          ),
-        },
-      ]);
+      const newNote = {
+        ...creatingNote,
+        y: getYFromDate(creatingNote.date || new Date().toISOString().split("T")[0]),
+      };
+      setNotes((prev) => [...prev, newNote]);
+      await insertNote(newNote);
       setCreatingNote(null);
     }
   };
 
-  const deleteNote = (id) => {
+  const deleteNote = async (id) => {
     setNotes((prev) => prev.filter((n) => n.id !== id));
+    await deleteNoteDB(id);
   };
 
   const updateNotePosition = (id, x, y) => {
