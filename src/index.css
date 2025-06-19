@@ -1,0 +1,62 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+.container {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+  position: relative;
+  background: linear-gradient(to bottom, #f9fafb, #e5e7eb);
+  padding-bottom: 3000px;
+}
+.timeline-line-vertical {
+  position: fixed;
+  left: 50%;
+  top: 0;
+  height: 100%;
+  width: 6px;
+  background: linear-gradient(to bottom, #3b82f6, #2563eb);
+  pointer-events: none;
+}
+.note-wrapper {
+  position: absolute;
+}
+.note-card {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.form-wrapper {
+  position: absolute;
+  z-index: 20;
+}
+.add-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 32px;
+  cursor: pointer;
+}
+.connector {
+  position: absolute;
+  height: 2px;
+  background-color: #3b82f6;
+  z-index: 1;
+}
+.note-wrapper { position: absolute; }
+.form-wrapper { pointer-events: auto; }
+
+.note-card img {
+  width: 100%;            /* si adatta sempre alla larghezza della card */
+  max-height: 150px;      /* alza o abbassa a piacere */
+  object-fit: cover;      /* riempie l’area ritagliando il surplus */
+  border-radius: 6px;     /* arrotonda leggermente i bordi */
+}
